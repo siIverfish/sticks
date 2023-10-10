@@ -3,35 +3,17 @@
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 
-@dataclass
-class PlayerAction:
-    """ Represents an action the player can take """
-
-
-@dataclass
-class PlayerAttackAction(PlayerAction):
-    """ An action of attacking the other hands """
-    self_pos: int
-    other_pos: int
-
-    callable = Player.attack
-    is_valid = Player.is_valid_attack
-
-
-@dataclass
-class PlayerSplitAction(PlayerAction):
-    """ Rearranges the player's hand """
-    new_hands: List[int]
-
-    callable = Player.split
-    is_valid = Player.is_valid_split
-    
+from player import (
+    PlayerAttackAction,
+    PlayerSplitAction,
+    PlayerAction,
+)
 
 class PlayerEngine(ABC):
     """ Interface for all engines """
 
     @abstractmethod
-    def move(self, game_state: "Game.State") -> "PlayerAction":
+    def move(self, game_state) -> "PlayerAction":
         """ Returns a PlayerAction based on the current board state. """
 
 
@@ -78,7 +60,7 @@ class UserControlled(PlayerEngine):
         """ Finds the attached player's number in the game for UI purposes. """
         return game_state.players.index(self.player) + 1
 
-    def move(self, game_state: Game.State) -> PlayerAction:
+    def move(self, game_state) -> PlayerAction:
         print(f"Player #{self.player_number(game_state)}'s turn:")
 
         if input("Attack or split? (a/s)").strip().lower() == "a":

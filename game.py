@@ -19,6 +19,14 @@ class Game:
         players: List[Player]
         active_player: Player
         other_player: Player
+        
+        def __hash__(self):
+            return hash((
+                self.players[0].state.hands[0],
+                self.players[0].state.hands[1],
+                self.players[1].state.hands[0],
+                self.players[1].state.hands[1],
+            ))
 
     def __init__(self, players):
         self.state = Game.State(players, players[0], players[1])
@@ -34,7 +42,7 @@ class Game:
     def game_is_over(self) -> bool:
         """ Returns 'True' if either player has boths hands equal to zero """
         return any(
-            player.state.hands == [0, 0]
+            not any(player.state.hands)
             for player in self.state.players
         )
 
@@ -76,11 +84,3 @@ class Game:
 
     def __str__(self):
         return f"Game:\n1: {self.state.players[0]}\n2: {self.state.players[1]}"
-
-    def __hash__(self):
-        return hash((
-            self.state.players[0].state.hands[0],
-            self.state.players[0].state.hands[1],
-            self.state.players[1].state.hands[0],
-            self.state.players[1].state.hands[1],
-        ))
